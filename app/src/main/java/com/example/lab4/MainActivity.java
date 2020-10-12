@@ -2,6 +2,9 @@ package com.example.lab4;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     EditText textNote;
     ArrayAdapter<String> adapter;
     RelativeLayout noteEditLayout, mainNoteLayout;
+    private DatabaseHelper myDataBaseHelper;
+    ArrayList<Note> allNotes = new ArrayList<>();
 
     //LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
     ArrayList<String> listItems=new ArrayList<String>();
@@ -29,6 +34,38 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate=");
         super.onCreate(savedInstanceState);
+        myDataBaseHelper = new DatabaseHelper(this);
+        try{
+            SQLiteDatabase database = myDataBaseHelper.getWritableDatabase();
+            Cursor cursor = database.query("notes", null, null , null,null,null,null );
+            if (cursor != null){
+                if(cursor.moveToFirst()){
+                    int cursorCount = cursor.getCount();
+                    for (int i = 0; i<cursor.getCount(); i++){
+                        Note noteData = new Note();
+                        int id = cursor.getInt(cursor.getColumnIndex("id"));
+                        String dataText = cursor.getString(cursor.getColumnIndex("note_text"));
+                        noteData.setId(id);
+                        noteData.setNoteText(dataText);
+                        Log.v(TAG,"got data: " + dataText);
+                        allNotes.add(noteData);
+                        listItems.add(dataText);
+                        cursor.moveToNext();
+                    }
+
+                }else{
+                    cursor.close();
+                    database.close();
+                }
+            }
+            else{
+                database.close();
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+
         setContentView(R.layout.activity_main);
         noteEditLayout = findViewById(R.id.noteEditLayout);
         mainNoteLayout = findViewById(R.id.mainNoteLayout);
@@ -36,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
         textNote = findViewById(R.id.editTextNote);
         adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter(adapter);
+
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
