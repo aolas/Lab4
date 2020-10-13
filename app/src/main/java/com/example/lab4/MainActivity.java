@@ -11,10 +11,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,8 +25,7 @@ public class MainActivity extends AppCompatActivity {
     EditText textNote;
     ArrayAdapter<String> adapter;
     RelativeLayout noteEditLayout, mainNoteLayout;
-    private DatabaseHelper myDataBaseHelper;
-    ArrayList<Note> allNotes = new ArrayList<>();
+    ListAdapter allNotes;
 
     //LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
     ArrayList<String> listItems=new ArrayList<String>();
@@ -34,45 +35,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate=");
         super.onCreate(savedInstanceState);
-        myDataBaseHelper = new DatabaseHelper(this);
-        try{
-            SQLiteDatabase database = myDataBaseHelper.getWritableDatabase();
-            Cursor cursor = database.query("notes", null, null , null,null,null,null );
-            if (cursor != null){
-                if(cursor.moveToFirst()){
-                    int cursorCount = cursor.getCount();
-                    for (int i = 0; i<cursor.getCount(); i++){
-                        Note noteData = new Note();
-                        int id = cursor.getInt(cursor.getColumnIndex("id"));
-                        String dataText = cursor.getString(cursor.getColumnIndex("note_text"));
-                        noteData.setId(id);
-                        noteData.setNoteText(dataText);
-                        Log.v(TAG,"got data: " + dataText);
-                        allNotes.add(noteData);
-                        listItems.add(dataText);
-                        cursor.moveToNext();
-                    }
 
-                }else{
-                    cursor.close();
-                    database.close();
-                }
-            }
-            else{
-                database.close();
-            }
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-
+        //myDataBaseHelper.updateNoteDBStructure();
 
         setContentView(R.layout.activity_main);
         noteEditLayout = findViewById(R.id.noteEditLayout);
         mainNoteLayout = findViewById(R.id.mainNoteLayout);
         listView = findViewById(R.id.noteListView);
         textNote = findViewById(R.id.editTextNote);
-        adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
-        listView.setAdapter(adapter);
+
+        NoteDatabase db = NoteDatabase.getInstance(this);
+        allNotes = (ListAdapter) db.noteDao().getAllNotes();
+
+
+        //adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
+        listView.setAdapter(allNotes);
 
 
 
@@ -80,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 // TODO Auto-generated method stub
-                String value=adapter.getItem(position);
-                Log.v(TAG, "onItemClick=" + value + " position: " + String.valueOf(position));
+                String value = allNotes.getItem(position).toString();
+                Log.v(TAG, "Value= " + value + " position: " + String.valueOf(position));
 
             }
         });
@@ -90,17 +67,18 @@ public class MainActivity extends AppCompatActivity {
     }
     public void onAddNewNote(View view) {
         Log.v(TAG, "onAddNewNote=");
+
         noteEditLayout.setVisibility(View.VISIBLE);
-        mainNoteLayout.setVisibility(view.INVISIBLE);
+        mainNoteLayout.setVisibility(View.INVISIBLE);
     }
     public void onCloseNote(View view) {
         String note = textNote.getText().toString();
-        adapter.add(note);
-        adapter.notifyDataSetChanged();
+        //adapter.add(note);
+        //adapter.notifyDataSetChanged();
         Log.v(TAG, String.valueOf(adapter.getCount()));
         Log.v(TAG, note);
         textNote.setText("");
         noteEditLayout.setVisibility(View.INVISIBLE);
-        mainNoteLayout.setVisibility(view.VISIBLE);
+        mainNoteLayout.setVisibility(View.VISIBLE);
     }
 }

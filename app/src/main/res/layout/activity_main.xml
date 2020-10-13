@@ -38,6 +38,9 @@
             android:contentDescription="@string/closeNote"
             app:srcCompat="@drawable/buttonx" />
 
+
+
+
     </RelativeLayout>
 
 
@@ -64,9 +67,6 @@
             android:layout_marginLeft="-150dp"
             android:layout_marginTop="20dp"
             />
-
-
-
     </RelativeLayout>
 
 
