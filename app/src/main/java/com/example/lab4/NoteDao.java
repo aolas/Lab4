@@ -19,6 +19,13 @@ public interface NoteDao {
     @Update
     void updateSingleNote(Note note);
 
+    @Query("SELECT * FROM note WHERE id=:id ")
+    public Note getNote(int id);
+
+
     @Query("SELECT * FROM note")
     List<Note> getAllNotes();
+
+    @Query("SELECT id, title FROM note")
+    List<AbstractNotes> getAllAbstractNotes();
 }

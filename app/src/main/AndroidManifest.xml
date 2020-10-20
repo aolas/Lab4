@@ -16,6 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.lab4.AddNoteActivity"
+            android:label="@string/addNoteActivity" />
+
+        <activity android:name="com.example.lab4.DeleteNoteActivity"
+            android:label="@string/deleteNoteAcivity"/>
     </application>
 
 </manifest>

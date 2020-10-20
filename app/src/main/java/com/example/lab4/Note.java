@@ -23,6 +23,13 @@ public class Note {
         this.title = title;
         this.noteText = noteText;
     }
+    @Ignore
+    public Note(int id) {
+        this.id = id;
+    }
+
+
+
 
     public void setId(int id) {
         this.id = id;

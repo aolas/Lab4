@@ -21,7 +21,7 @@ public abstract class NoteDatabase extends RoomDatabase {
             instance = Room.databaseBuilder(context,NoteDatabase.class, "note_db")
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
-            //.addCallback(initial)
+            .addCallback(initialCallback)
             .build()       ;
         }
         return instance;
@@ -43,7 +43,7 @@ public abstract class NoteDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
             noteDao.insertSingleNote(new Note("Melisa note","contact phone +37061899456"));
-            noteDao.insertSingleNote(new Note("Brad note","We can have the deal"));
+            noteDao.insertSingleNote(new Note("Brad note","We can make a deal"));
             noteDao.insertSingleNote(new Note("Tom note","We have his email: tom@gmail.com"));
             return null;
         }

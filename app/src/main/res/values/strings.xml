@@ -1,14 +1,11 @@
 <resources>
     <string name="app_name">Lab4</string>
     <string name="addNote">Add new note</string>
+    <string name="addNoteActivity">Add note activity</string>
     <string name="noteField">Note field</string>
     <string name="closeNote">close note</string>
     <string name="title">Title</string>
     <string name="id">ID</string>
-
-    <string-array name="array_technology">
-        <item>Android</item>
-        <item>Java</item>
-        <item>Php</item>
-    </string-array>
+    <string name="save">Save note</string>
+    <string name="deleteNoteAcivity">Delete note activity</string>
 </resources>
