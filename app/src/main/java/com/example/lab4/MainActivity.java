@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.util.List;
@@ -24,16 +24,9 @@ public class MainActivity extends AppCompatActivity {
     AbstractNotes absNote;
     Note currentNote;
     EditText updateTitle, updateEditTextNote;
-    List<Note> allNotes;
-    Intent intent;
+    Toast message;
     RelativeLayout noteUpdaytLayout, listViewLayout;
     NoteDatabase db;
-
-    //LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
-
-
-    //DEFINING A STRING ADAPTER WHICH WILL HANDLE THE DATA OF THE LISTVIEW
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +40,8 @@ public class MainActivity extends AppCompatActivity {
         updateEditTextNote = findViewById(R.id.updateEditTextNote);
 
         db= NoteDatabase.getInstance(this);
-        allNotes = db.noteDao().getAllNotes();
         List<AbstractNotes> abNotes = db.noteDao().getAllAbstractNotes();
-
+        message =Toast.makeText(getApplicationContext(),R.string.empty,Toast.LENGTH_SHORT);
         ArrayAdapter<AbstractNotes> dataAdapter = new ArrayAdapter<AbstractNotes>(this, android.R.layout.simple_list_item_1, abNotes);
         listView.setAdapter(dataAdapter);
 
@@ -72,24 +64,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    public void onDeleteNoteActivity(View view){
+        Log.v(TAG, "on Delete Note");
+        Intent intent = new Intent(MainActivity.this, DeleteNoteActivity.class);
+        startActivity(intent);
+        finish();
+    }
     public void onAddNewNote(View view) {
-        Log.v(TAG, "onAddNewNote=");
+        Log.v(TAG, "on Add New Note");
 
-        intent = new Intent(MainActivity.this, AddNoteActivity.class);
+        Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
         startActivity(intent);
         finish();
     }
 
     public void onUpdateSaveandClose(View view) {
-        Note newNote = new Note(currentNote.getId(),updateTitle.getText().toString(),updateEditTextNote.getText().toString() );
-        absNote.setTitle(updateTitle.getText().toString());
-        db.noteDao().updateSingleNote(newNote);
-        noteUpdaytLayout.setVisibility(View.GONE);
-        listViewLayout.setVisibility(View.VISIBLE);
+        String title, note;
+        title = updateTitle.getText().toString();
+        note = updateEditTextNote.getText().toString();
+        if (!title.matches("") && !note.matches("")){
+            Note newNote = new Note(currentNote.getId(),title, note);
+            absNote.setTitle(updateTitle.getText().toString());
+            db.noteDao().updateSingleNote(newNote);
+            noteUpdaytLayout.setVisibility(View.GONE);
+            listViewLayout.setVisibility(View.VISIBLE);
+        }else{
+            message.setText(getString(R.string.emptyText));
+            message.show();
+            Log.v(TAG, "Can't be Empty text");
+        }
+
+
     }
 
     public void onCloseNoteWithoutUpdate(View view) {
-
+        Log.v(TAG, "On note close without update");
         noteUpdaytLayout.setVisibility(View.GONE);
         listViewLayout.setVisibility(View.VISIBLE);
     }

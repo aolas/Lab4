@@ -8,4 +8,8 @@
     <string name="id">ID</string>
     <string name="save">Save note</string>
     <string name="deleteNoteAcivity">Delete note activity</string>
+    <string name="delete">Delete</string>
+    <string name="empty">No more items to delete</string>
+    <string name="Deleted">Deleted</string>
+    <string name="emptyText">Can\'t be Empty text</string>
 </resources>

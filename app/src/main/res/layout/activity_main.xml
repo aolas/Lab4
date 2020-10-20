@@ -25,6 +25,17 @@
             android:layout_toEndOf="@id/noteListView"
             android:layout_marginStart="-150dp"
             android:layout_marginTop="20dp"/>
+
+        <Button
+            android:id="@+id/btnDeleteActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onDeleteNoteActivity"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="-224dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toStartOf="@id/noteListView"
+            android:text="@string/deleteNoteAcivity" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="wrap_content"
