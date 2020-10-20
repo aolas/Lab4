@@ -14,7 +14,7 @@ public class AddNoteActivity extends AppCompatActivity {
     private Intent intent;
     private EditText textNote, titleNote;
     NoteDatabase db;
-    Toast message;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -24,7 +24,7 @@ public class AddNoteActivity extends AppCompatActivity {
         titleNote = findViewById(R.id.title);
         textNote = findViewById(R.id.editTextNote);
         db = NoteDatabase.getInstance(this);
-        message =Toast.makeText(getApplicationContext(),R.string.empty,Toast.LENGTH_SHORT);
+
     }
     public void onSaveandClose(View view){
         Log.v(TAG, "On save and close");
@@ -37,7 +37,7 @@ public class AddNoteActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }else{
-            message.setText(getString(R.string.emptyText));
+            Toast message =Toast.makeText(getApplicationContext(),R.string.empty,Toast.LENGTH_SHORT);
             message.show();
             Log.v(TAG, "Can't be Empty text");
         }
